@@ -1,6 +1,7 @@
 package com.nezamipour.mehdi.tmdb.network
 
-import com.nezamipour.mehdi.tmdb.data.model.Movie
+import com.nezamipour.mehdi.moviebaz.data.model.Genre
+import com.nezamipour.mehdi.moviebaz.data.model.Movie
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,7 +21,8 @@ interface ApiService {
     suspend fun getMovieDetails(
         @Query("api_key") api_key: String,
         @Path("movie_id") movie_id: Int
-    ) : Response<Movie>
+    ): Response<Movie>
+
 
     @GET(Routes.SEARCH)
     suspend fun searchMovie(
@@ -37,7 +39,7 @@ interface ApiService {
 
 
     //get all genres
-/*    @GET(Routes.MOVIE_GENRES)
-    suspend fun getAllGenres(@Query("api_key") api_key: String): Response<GenreListResponse>*/
+    @GET(Routes.MOVIE_GENRES)
+    suspend fun getAllGenres(@Query("api_key") api_key: String): Response<List<Genre>>
 
 }
