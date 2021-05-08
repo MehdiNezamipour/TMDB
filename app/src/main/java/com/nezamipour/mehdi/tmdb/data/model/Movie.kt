@@ -1,4 +1,4 @@
-package com.nezamipour.mehdi.moviebaz.data.model
+package com.nezamipour.mehdi.tmdb.data.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

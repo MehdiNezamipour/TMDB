@@ -1,4 +1,4 @@
-package com.nezamipour.mehdi.tmdb
+package com.nezamipour.mehdi.tmdb.view.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

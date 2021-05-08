@@ -4,14 +4,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.nezamipour.mehdi.moviebaz.data.model.Movie
+import com.nezamipour.mehdi.tmdb.data.model.Movie
 import com.nezamipour.mehdi.tmdb.databinding.MovieItemLayoutBinding
 import com.nezamipour.mehdi.tmdb.utils.ImageUtils
+import javax.inject.Inject
 
-class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieListHolder>() {
+class MovieListAdapter @Inject constructor() :
+    RecyclerView.Adapter<MovieListAdapter.MovieListHolder>() {
 
 
-    private lateinit var movies: List<Movie>
+    private val movies = ArrayList<Movie>()
+
+    fun setMovieList(list: List<Movie>) {
+        movies.clear()
+        movies.addAll(list)
+        notifyDataSetChanged()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListHolder {
         val binding =
