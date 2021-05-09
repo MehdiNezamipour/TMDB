@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MovieRepository @Inject constructor(private val apiService: ApiService) {
 
     val movies: MutableLiveData<List<Movie>> = MutableLiveData()
-
+    val movieDetails: MutableLiveData<Movie> = MutableLiveData()
 
     suspend fun loadMovies(page: Int) {
         val response = apiService.getPopular(Routes.API_KEY, page)
@@ -25,6 +25,22 @@ class MovieRepository @Inject constructor(private val apiService: ApiService) {
             }
         } catch (e: HttpException) {
             Log.d("HomeViewModel", "fetchPopularMovies: ${e.message()}")
+        }
+    }
+
+
+    suspend fun loadDetails(movieId: Int) {
+        val response = apiService.getMovieDetails(movieId,Routes.API_KEY)
+        try {
+            if (response.isSuccessful) {
+                Log.d("HomeViewModel", "loadDetails:  ${response.body()}")
+                movieDetails.value = response.body()
+            } else {
+                Log.d("HomeViewModel", "loadDetails: ${response.errorBody()}")
+            }
+        } catch (e: HttpException){
+            Log.d("HomeViewModel", "loadDetails: ${e.message()}")
+
         }
     }
 }

@@ -22,12 +22,8 @@ class MyApplication : Application() {
     }
 
     private fun buildComponent(): AppComponent? {
+        return DaggerAppComponent.create()
 
-        return DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .retrofitModule(RetrofitModule())
-            .repositoryModule(RepositoryModule())
-            .build()
     }
 
 }
