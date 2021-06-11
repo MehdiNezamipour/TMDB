@@ -1,4 +1,4 @@
-package com.nezamipour.mehdi.tmdb.data.remote
+package com.nezamipour.mehdi.tmdb.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.nezamipour.mehdi.tmdb.data.local.AppDatabase
 import com.nezamipour.mehdi.tmdb.data.local.MovieDao
+import com.nezamipour.mehdi.tmdb.data.local.MovieRemoteKeyDao
 import com.nezamipour.mehdi.tmdb.data.remote.ApiService
 import com.nezamipour.mehdi.tmdb.data.remote.Routes
 import com.nezamipour.mehdi.tmdb.repository.MovieRepository
@@ -63,6 +64,12 @@ class DatabaseModule {
     @Singleton
     fun provideMovieDao(appDatabase: AppDatabase): MovieDao {
         return appDatabase.getMovieDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieRemoteKeyDao(appDatabase: AppDatabase): MovieRemoteKeyDao {
+        return appDatabase.getMovieRemoteKeyDao()
     }
 
 
