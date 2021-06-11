@@ -1,20 +1,25 @@
 package com.nezamipour.mehdi.tmdb.di.module
 
-import android.app.Application
-import com.google.gson.*
-import com.nezamipour.mehdi.tmdb.data.model.Movie
-import com.nezamipour.mehdi.tmdb.data.model.repository.MovieRepository
-import com.nezamipour.mehdi.tmdb.network.ApiService
-import com.nezamipour.mehdi.tmdb.network.Routes
+import android.content.Context
+import androidx.room.Room
+import com.nezamipour.mehdi.tmdb.data.local.AppDatabase
+import com.nezamipour.mehdi.tmdb.data.local.MovieDao
+import com.nezamipour.mehdi.tmdb.data.remote.ApiService
+import com.nezamipour.mehdi.tmdb.data.remote.Routes
+import com.nezamipour.mehdi.tmdb.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class RetrofitModule {
+
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -34,6 +39,7 @@ class RetrofitModule {
 }
 
 @Module
+@InstallIn(SingletonComponent::class)
 class RepositoryModule {
     @Provides
     @Singleton
@@ -43,10 +49,22 @@ class RepositoryModule {
 }
 
 @Module
-class AppModule(val application: Application) {
+@InstallIn(SingletonComponent::class)
+class DatabaseModule {
     @Provides
     @Singleton
-    fun provideApplication(): Application {
-        return application
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.databaseBuilder(context, AppDatabase::class.java, "movieDB.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideMovieDao(appDatabase: AppDatabase): MovieDao {
+        return appDatabase.getMovieDao()
+    }
+
+
 }
+

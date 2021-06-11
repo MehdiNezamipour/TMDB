@@ -6,23 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
-import com.nezamipour.mehdi.tmdb.MyApplication
-import com.nezamipour.mehdi.tmdb.R
+import androidx.fragment.app.viewModels
 import com.nezamipour.mehdi.tmdb.databinding.FragmentHomeBinding
 import com.nezamipour.mehdi.tmdb.view.adapter.MovieListAdapter
 import com.nezamipour.mehdi.tmdb.view.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    @Inject
-    lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by viewModels()
 
     @Inject
     lateinit var adapter: MovieListAdapter
@@ -30,7 +27,7 @@ class HomeFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        MyApplication.getComponent()?.inject(this)
+        //MyApplication.getComponent()?.inject(this)
     }
 
 
@@ -38,7 +35,6 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel.fetchPopularMovies(1)
-
         viewModel.movies.observe(this, {
             adapter.setMovieList(it)
         })

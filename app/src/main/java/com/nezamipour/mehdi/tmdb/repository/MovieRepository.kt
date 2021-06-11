@@ -1,11 +1,10 @@
-package com.nezamipour.mehdi.tmdb.data.model.repository
+package com.nezamipour.mehdi.tmdb.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.nezamipour.mehdi.tmdb.data.model.Movie
-import com.nezamipour.mehdi.tmdb.network.ApiService
-import com.nezamipour.mehdi.tmdb.network.Routes
+import com.nezamipour.mehdi.tmdb.model.Movie
+import com.nezamipour.mehdi.tmdb.data.remote.ApiService
+import com.nezamipour.mehdi.tmdb.data.remote.Routes
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class MovieRepository @Inject constructor(private val apiService: ApiService) {
 
 
     suspend fun loadDetails(movieId: Int) {
-        val response = apiService.getMovieDetails(movieId,Routes.API_KEY)
+        val response = apiService.getMovieDetails(movieId, Routes.API_KEY)
         try {
             if (response.isSuccessful) {
                 Log.d("HomeViewModel", "loadDetails:  ${response.body()}")

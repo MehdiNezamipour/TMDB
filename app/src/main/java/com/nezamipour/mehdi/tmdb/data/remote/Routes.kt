@@ -1,4 +1,4 @@
-package com.nezamipour.mehdi.tmdb.network
+package com.nezamipour.mehdi.tmdb.data.remote
 
 object Routes {
 

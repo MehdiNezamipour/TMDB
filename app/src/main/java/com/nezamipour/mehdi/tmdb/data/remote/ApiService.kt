@@ -1,7 +1,10 @@
-package com.nezamipour.mehdi.tmdb.network
+package com.nezamipour.mehdi.tmdb.data.remote
 
-import com.nezamipour.mehdi.tmdb.data.model.Genre
-import com.nezamipour.mehdi.tmdb.data.model.Movie
+import androidx.paging.PagingSource
+import androidx.room.Insert
+import com.nezamipour.mehdi.tmdb.model.Genre
+import com.nezamipour.mehdi.tmdb.model.Movie
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -9,13 +12,13 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-
-    //each page return 10 movies
+    // only we work with this request in this app
     @GET(Routes.POPULAR)
     suspend fun getPopular(
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response<MovieListResponse>
+
 
     @GET(Routes.MOVIE_DETAIL)
     suspend fun getMovieDetails(

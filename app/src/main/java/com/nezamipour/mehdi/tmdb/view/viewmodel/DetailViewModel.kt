@@ -1,14 +1,14 @@
 package com.nezamipour.mehdi.tmdb.view.viewmodel
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nezamipour.mehdi.tmdb.data.model.Movie
-import com.nezamipour.mehdi.tmdb.data.model.repository.MovieRepository
+import com.nezamipour.mehdi.tmdb.model.Movie
+import com.nezamipour.mehdi.tmdb.repository.MovieRepository
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) :
+class DetailViewModel @ViewModelInject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
 
     val movieDetails: LiveData<Movie> = movieRepository.movieDetails

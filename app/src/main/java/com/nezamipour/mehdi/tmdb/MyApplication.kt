@@ -1,15 +1,14 @@
 package com.nezamipour.mehdi.tmdb
 
 import android.app.Application
-import com.nezamipour.mehdi.tmdb.di.component.AppComponent
-import com.nezamipour.mehdi.tmdb.di.component.DaggerAppComponent
-import com.nezamipour.mehdi.tmdb.di.module.AppModule
-import com.nezamipour.mehdi.tmdb.di.module.RepositoryModule
-import com.nezamipour.mehdi.tmdb.di.module.RetrofitModule
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MyApplication : Application() {
 
-    companion object {
+
+    // for dagger 2
+/*    companion object {
         private var component: AppComponent? = null
         fun getComponent(): AppComponent? {
             return component
@@ -24,6 +23,6 @@ class MyApplication : Application() {
     private fun buildComponent(): AppComponent? {
         return DaggerAppComponent.create()
 
-    }
+    }*/
 
 }

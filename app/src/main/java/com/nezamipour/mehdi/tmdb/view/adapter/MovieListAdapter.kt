@@ -8,7 +8,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.nezamipour.mehdi.tmdb.R
-import com.nezamipour.mehdi.tmdb.data.model.Movie
+import com.nezamipour.mehdi.tmdb.model.Movie
 import com.nezamipour.mehdi.tmdb.databinding.MovieItemLayoutBinding
 import com.nezamipour.mehdi.tmdb.utils.ImageUtils
 import javax.inject.Inject

@@ -1,33 +1,30 @@
 package com.nezamipour.mehdi.tmdb.view.fragment
 
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.nezamipour.mehdi.tmdb.MyApplication
-import com.nezamipour.mehdi.tmdb.R
 import com.nezamipour.mehdi.tmdb.databinding.FragmentDetailBinding
 import com.nezamipour.mehdi.tmdb.utils.ImageUtils
 import com.nezamipour.mehdi.tmdb.view.viewmodel.DetailViewModel
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    lateinit var binding: FragmentDetailBinding
+    private lateinit var binding: FragmentDetailBinding
 
-    @Inject
-    lateinit var viewModel: DetailViewModel
+    private val viewModel: DetailViewModel by viewModels()
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        MyApplication.getComponent()?.inject(this)
+        //MyApplication.getComponent()?.inject(this)
     }
 
 

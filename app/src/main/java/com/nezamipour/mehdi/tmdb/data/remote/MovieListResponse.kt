@@ -1,7 +1,7 @@
-package com.nezamipour.mehdi.tmdb.network
+package com.nezamipour.mehdi.tmdb.data.remote
 
 import com.google.gson.annotations.SerializedName
-import com.nezamipour.mehdi.tmdb.data.model.Movie
+import com.nezamipour.mehdi.tmdb.model.Movie
 
 class MovieListResponse {
     @SerializedName("total_pages")
