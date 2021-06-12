@@ -8,7 +8,7 @@ import com.nezamipour.mehdi.tmdb.model.Movie
 interface MovieDao {
 
 
-    @Query("SELECT * FROM movie ORDER BY id ASC")
+    @Query("SELECT * FROM movie")
     fun pagingSource(): PagingSource<Int, Movie>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

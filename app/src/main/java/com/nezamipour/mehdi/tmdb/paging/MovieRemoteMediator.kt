@@ -11,10 +11,9 @@ import com.nezamipour.mehdi.tmdb.data.remote.Routes
 import com.nezamipour.mehdi.tmdb.model.Movie
 import com.nezamipour.mehdi.tmdb.model.MovieRemoteKey
 import java.io.InvalidObjectException
-import javax.inject.Inject
 
 @ExperimentalPagingApi
-class MovieRemoteMediator @Inject constructor(
+class MovieRemoteMediator constructor(
     private val apiService: ApiService,
     private val movieDao: MovieDao,
     private val movieRemoteKeyDao: MovieRemoteKeyDao,
@@ -24,19 +23,21 @@ class MovieRemoteMediator @Inject constructor(
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Movie>): MediatorResult {
         return try {
-            val page: Int = when (loadType) {
+            val page = when (loadType) {
+                LoadType.REFRESH -> {
+                    val remoteKey = getClosestRemoteKey(state)
+                    remoteKey?.next?.minus(1) ?: initialPage
+                }
+                LoadType.PREPEND -> {
+                    return MediatorResult.Success(endOfPaginationReached = true)
+                }
                 LoadType.APPEND -> {
                     val remoteKey =
                         getLastRemoteKey(state) ?: throw InvalidObjectException("invalid object")
                     remoteKey.next ?: return MediatorResult.Success(endOfPaginationReached = true)
                 }
-                LoadType.PREPEND -> {
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                }
-                LoadType.REFRESH -> {
-                    val remoteKey = getClosestRemoteKey(state)
-                    remoteKey?.next?.minus(1) ?: initialPage
-                }
+
+
             }
 
             // NetWork request
@@ -49,8 +50,8 @@ class MovieRemoteMediator @Inject constructor(
                         movieDao.deleteAll()
                         movieRemoteKeyDao.deleteAllRemoteKeys()
                     }
-                    val next = if (endOfPagination) null else page + 1
                     val prev = if (page == initialPage) null else page - 1
+                    val next = if (endOfPagination) null else page + 1
 
                     val remoteList = movieListResponse.results?.map {
                         MovieRemoteKey(id = it.id, next = next, prev = prev)
@@ -58,6 +59,7 @@ class MovieRemoteMediator @Inject constructor(
                     if (remoteList != null) {
                         movieRemoteKeyDao.insertAllRemoteKey(remoteList)
                     }
+
                     movieListResponse.results?.let { movieDao.insertAll(it) }
                 }
                 return MediatorResult.Success(endOfPagination)

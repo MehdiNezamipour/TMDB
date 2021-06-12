@@ -1,24 +1,35 @@
 package com.nezamipour.mehdi.tmdb.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.nezamipour.mehdi.tmdb.model.Movie
-import com.nezamipour.mehdi.tmdb.repository.MovieRepository
-import kotlinx.coroutines.launch
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import com.nezamipour.mehdi.tmdb.data.local.MovieDao
+import com.nezamipour.mehdi.tmdb.data.local.MovieRemoteKeyDao
+import com.nezamipour.mehdi.tmdb.data.remote.ApiService
+import com.nezamipour.mehdi.tmdb.paging.MovieRemoteMediator
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(private val movieRepository: MovieRepository) :
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    apiService: ApiService,
+    private val movieDao: MovieDao,
+    movieRemoteKeyDao: MovieRemoteKeyDao
+) :
     ViewModel() {
 
-    val movies: LiveData<List<Movie>> = movieRepository.movies
+    private val pagingConfig =
+        PagingConfig(pageSize = 20)
 
-
-    fun fetchPopularMovies(page: Int) {
-        viewModelScope.launch {
-            movieRepository.loadMovies(page)
-        }
-    }
+    @ExperimentalPagingApi
+    val pager =
+        Pager(
+            pagingConfig,
+            remoteMediator = MovieRemoteMediator(apiService, movieDao, movieRemoteKeyDao,1),
+        ) {
+            movieDao.pagingSource()
+        }.flow
 
 
 }

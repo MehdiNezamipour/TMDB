@@ -2,6 +2,7 @@ package com.nezamipour.mehdi.tmdb.model
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
@@ -9,13 +10,12 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "movie")
 @Parcelize
 data class Movie(
-
     @PrimaryKey(autoGenerate = false)
     val id: Int,
     val title: String?,
     val overview: String?,
-    @SerializedName("genre_ids")
-    val genreIds: List<Int>?,
+/*    @SerializedName("genre_ids")
+    val genreIds: List<Int>?,*/
     @SerializedName("poster_path")
     val posterPath: String?,
     @SerializedName("vote_count")

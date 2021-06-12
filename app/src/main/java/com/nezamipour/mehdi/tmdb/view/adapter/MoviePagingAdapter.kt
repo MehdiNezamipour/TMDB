@@ -8,9 +8,8 @@ import com.nezamipour.mehdi.tmdb.databinding.MovieItemLayoutBinding
 import com.nezamipour.mehdi.tmdb.model.Movie
 import javax.inject.Inject
 
-class MoviePagingAdapter : PagingDataAdapter<Movie, MovieHolder>(DIFF_CALLBACK) {
-
-    private val items = ArrayList<Movie>()
+class MoviePagingAdapter @Inject constructor() :
+    PagingDataAdapter<Movie, MovieHolder>(DIFF_CALLBACK) {
 
 
     companion object {
@@ -27,14 +26,10 @@ class MoviePagingAdapter : PagingDataAdapter<Movie, MovieHolder>(DIFF_CALLBACK) 
         }
     }
 
-    fun setItems(list: List<Movie>) {
-        items.clear()
-        items.addAll(list)
-        notifyDataSetChanged()
-    }
-
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
-        holder.bind(movie = items[position])
+        getItem(position)?.let {
+            holder.bind(it)
+        }
     }
 
 

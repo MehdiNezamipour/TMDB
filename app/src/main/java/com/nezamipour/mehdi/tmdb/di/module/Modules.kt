@@ -1,6 +1,7 @@
 package com.nezamipour.mehdi.tmdb.di.module
 
 import android.content.Context
+import androidx.paging.ExperimentalPagingApi
 import androidx.room.Room
 import com.nezamipour.mehdi.tmdb.data.local.AppDatabase
 import com.nezamipour.mehdi.tmdb.data.local.MovieDao
@@ -56,7 +57,6 @@ class DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(context, AppDatabase::class.java, "movieDB.db")
-            .fallbackToDestructiveMigration()
             .build()
     }
 
