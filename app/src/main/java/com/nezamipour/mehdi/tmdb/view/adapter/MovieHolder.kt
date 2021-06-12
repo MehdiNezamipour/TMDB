@@ -20,7 +20,8 @@ class MovieHolder(
 
     fun bind(movie: Movie) {
         this.movie = movie
-        setListeners(movieId = movie.id)
+        // TODO Later
+        //setListeners(movieId = movie.id)
         binding.textViewDescription.text = movie.overview
         binding.ratingBar.rating = movie.voteAverage!! / 2
         binding.textViewRating.text = movie.voteAverage.toString()
