@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.nezamipour.mehdi.tmdb.data.local.AppDatabase
 import com.nezamipour.mehdi.tmdb.data.local.MovieDao
 import com.nezamipour.mehdi.tmdb.data.local.MovieRemoteKeyDao
 import com.nezamipour.mehdi.tmdb.data.remote.ApiService
@@ -13,23 +14,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    apiService: ApiService,
-    private val movieDao: MovieDao,
-    movieRemoteKeyDao: MovieRemoteKeyDao
+    private val apiService: ApiService,
+    private val appDatabase: AppDatabase
 ) :
     ViewModel() {
 
-    private val pagingConfig =
-        PagingConfig(pageSize = 20)
 
     @ExperimentalPagingApi
-    val pager =
-        Pager(
-            pagingConfig,
-            remoteMediator = MovieRemoteMediator(apiService, movieDao, movieRemoteKeyDao,1),
-        ) {
-            movieDao.pagingSource()
-        }.flow
-
+    val pager = Pager(
+        PagingConfig(pageSize = 20,2,true),
+        remoteMediator = MovieRemoteMediator(apiService = apiService, appDatabase = appDatabase)
+    ) {
+        appDatabase.getMovieDao().pagingSource()
+    }.flow
 
 }

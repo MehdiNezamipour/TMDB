@@ -3,6 +3,7 @@ package com.nezamipour.mehdi.tmdb.di.module
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.room.Room
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.nezamipour.mehdi.tmdb.data.local.AppDatabase
 import com.nezamipour.mehdi.tmdb.data.local.MovieDao
 import com.nezamipour.mehdi.tmdb.data.local.MovieRemoteKeyDao
@@ -14,6 +15,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -24,9 +27,35 @@ class RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideOkHttpClient(
+        headerInterceptor: Interceptor
+    ): OkHttpClient =
+        OkHttpClient.Builder()
+            .addNetworkInterceptor(StethoInterceptor())
+            .addInterceptor(headerInterceptor)
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideHeaderInterceptor(): Interceptor =
+        Interceptor { chain ->
+            val request = chain.request()
+            val newUrl = request.url().newBuilder()
+                .addQueryParameter("api_key", Routes.API_KEY)
+                .build()
+
+            val newRequest = request.newBuilder()
+                .url(newUrl)
+                .build()
+            chain.proceed(newRequest)
+        }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Routes.BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

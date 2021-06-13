@@ -15,7 +15,7 @@ class MovieRepository
     val movieDetails: MutableLiveData<Movie> = MutableLiveData()
 
     suspend fun loadDetails(movieId: Int) {
-        val response = apiService.getMovieDetails(movieId, Routes.API_KEY)
+        val response = apiService.getMovieDetails(movieId)
         try {
             if (response.isSuccessful) {
                 Log.d("HomeViewModel", "loadDetails:  ${response.body()}")

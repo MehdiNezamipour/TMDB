@@ -10,12 +10,12 @@ import com.nezamipour.mehdi.tmdb.model.MovieRemoteKey
 interface MovieRemoteKeyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllRemoteKey(remoteKeys: List<MovieRemoteKey>)
+    suspend fun insertAll(remoteKeys: List<MovieRemoteKey>)
 
     @Query("SELECT * FROM MovieRemoteKey WHERE id=:id")
     suspend fun getRemoteKey(id: Int): MovieRemoteKey?
 
     @Query("DELETE FROM MovieRemoteKey")
-    suspend fun deleteAllRemoteKeys()
+    suspend fun deleteAll()
 
 }

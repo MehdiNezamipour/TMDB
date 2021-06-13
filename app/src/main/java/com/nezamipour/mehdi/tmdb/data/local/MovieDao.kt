@@ -8,14 +8,14 @@ import com.nezamipour.mehdi.tmdb.model.Movie
 interface MovieDao {
 
 
-    @Query("SELECT * FROM movie")
-    fun pagingSource(): PagingSource<Int, Movie>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: Movie)
+    suspend fun insert(movie: Movie)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(movies: List<Movie>)
+
+    @Query("SELECT * FROM movie ORDER BY voteAverage DESC")
+    fun pagingSource(): PagingSource<Int, Movie>
 
     @Query("DELETE FROM movie ")
     suspend fun deleteAll()
