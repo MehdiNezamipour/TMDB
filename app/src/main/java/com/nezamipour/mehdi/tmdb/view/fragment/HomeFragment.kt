@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.nezamipour.mehdi.tmdb.databinding.FragmentHomeBinding
-import com.nezamipour.mehdi.tmdb.view.adapter.MovieLoadStateAdapter
 import com.nezamipour.mehdi.tmdb.view.adapter.MoviePagingAdapter
+import com.nezamipour.mehdi.tmdb.view.adapter.PagingLoadStateAdapter
 import com.nezamipour.mehdi.tmdb.view.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,42 +51,39 @@ class HomeFragment : Fragment() {
     @ExperimentalPagingApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            this.adapter = pagingAdapter.withLoadStateFooter(
-                footer = MovieLoadStateAdapter { pagingAdapter.retry() }
+
+        with(pagingAdapter) {
+            binding.recyclerView.setHasFixedSize(true)
+            binding.recyclerView.adapter = this.withLoadStateHeaderAndFooter(
+                header = PagingLoadStateAdapter(this),
+                footer = PagingLoadStateAdapter(this)
             )
-        }
-        pagingAdapter.addLoadStateListener { loadState ->
 
-            if (loadState.refresh is LoadState.Loading) {
-                // Show ProgressBar
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                // Hide ProgressBar
-                binding.progressBar.visibility = View.GONE
-
-                // If we have an error, show a toast
-                val errorState = when {
-                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
-                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
-                    else -> null
-                }
-                errorState?.let {
-                    Toast.makeText(requireContext(), it.error.message, Toast.LENGTH_LONG).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.pager.collectLatest {
+                    pagingAdapter.submitData(it)
                 }
             }
+
+            //TODO LATER FIX BUG
+//            binding.swipeRefresher.setOnRefreshListener {
+//                pagingAdapter.refresh()
+//            }
+//
+//            viewLifecycleOwner.lifecycleScope.launch {
+//                loadStateFlow.collectLatest {
+//                    binding.swipeRefresher.isRefreshing = it.refresh is LoadState.Loading
+//                }
+//            }
+//
+//            viewLifecycleOwner.lifecycleScope.launch {
+//                loadStateFlow.distinctUntilChangedBy { it.refresh }
+//                    .filter { it.refresh is LoadState.NotLoading }
+//                    .collect { binding.recyclerView.scrollToPosition(0) }
+//            }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.pager.collectLatest {
-                pagingAdapter.submitData(it)
-            }
-        }
 
     }
-
 
 }
