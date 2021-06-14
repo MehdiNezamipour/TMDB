@@ -1,16 +1,17 @@
 package com.nezamipour.mehdi.tmdb.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
 
 @Entity(tableName = "movie")
 @Parcelize
 data class Movie(
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
     val title: String?,
     val overview: String?,
@@ -33,4 +34,9 @@ data class Movie(
     @SerializedName("release_date")
     val releaseDate: String?
 
-) : Parcelable
+) : Parcelable {
+    @IgnoredOnParcel
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "idd")
+    var idd: Int = 1
+}
